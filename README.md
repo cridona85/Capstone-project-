@@ -21,3 +21,33 @@ I prioritised exploratory learning—visualising data, testing kernel combinatio
 While I have mainly relied on Bayesian techniques, I recognise that Support Vector Machines (SVMs) could complement the GP by classifying high- vs low-performing regions, particularly using a soft-margin or kernel-based SVM to handle noisy, non-linear boundaries. As data accumulates, some overfitting has appeared in low-dimensional functions, highlighting the need for smoother priors and possible dimensionality reduction.
 
 Overall, this iterative, black-box process mirrors real-world ML challenges—requiring critical thinking under uncertainty, evidence-based decision-making and adaptive model refinement to progressively move toward optimal solutions.
+
+## **6. Observations as per week 4** 
+### Strategy and “Support Vectors”
+
+In this optimisation task, support vectors refer to input points that lie near a decision boundary or a region of rapid change in the response surface. Recognising these points helps identify areas where the function output shifts quickly, indicating where the next query should explore to capture new information. Across the iterations, I achieved improvements from the original outputs for all functions except Function 1, with percentage improvements ranging between 3% (Function 8) and 109% (Function 4). In particular:
+
+Function 4 showed consistent improvement each week, with the highest gain of 109% in Week 4, indicating a well-aligned exploration path.
+Functions 3, 5, and 7 exhibited steep output transitions (improvements of 68%, 67%, and 88% respectively) between Weeks 2 and 3. These regions likely acted as support vectors — areas of rapid change but the subsequent decline suggests potential over-exploitation near a local optimum.
+Functions 2, 6, and 8 showed more moderate improvements (9%, 6%, and 3%, respectively), with gains achieved between Weeks 1 and 3.
+Querying around these rapidly changing input regions could help refine the surrogate model further and uncover additional optima.
+
+Across all eight functions, I applied Bayesian Optimisation using Gaussian Processes (GPs) with different kernels and acquisition functions. My primary goal was to balance exploration and exploitation.
+
+### Neural Networks and Gradients
+
+I did not train a neural network surrogate, primarily because the available data was too limited to support robust training and because I have not yet fully completed the training material needed to apply it confidently. Neural networks generally require a large number of observations to generalise effectively whereas Gaussian Processes perform well with sparse data.
+
+However, in higher-dimensional settings or with larger datasets, a neural network surrogate could capture more complex non-linear interactions. I plan to explore this approach in future iterations if appropriate. Examining the trends, Functions 3, 4, 6, and 8 displayed stronger sensitivity to specific input variables, as shown by significant week-to-week variation in outputs. In a neural surrogate context, I believe these would correspond to inputs with the steepest gradient magnitudes — indicating where small input changes cause large output differences. Recognising these inputs would help focus future experiments on the most influential variables, thereby accelerating convergence towards the global optimum.
+
+### Classification
+
+If the optimisation problem were reframed as a classification task, outcomes above a given performance threshold could be labelled as “good” and those below as “bad.”
+
+Logistic regression or Support Vector Machines (SVMs) could then be used to estimate the decision boundary.
+SVMs could be suitable since their support vectors lie along the margin,  aligning with the idea of focusing queries near regions of uncertainty or rapid change.
+The main trade-off would be between exploitation/misclassification risk (staying close to known regions) and exploration (testing uncertain areas that could reveal better optima).
+
+Model Selection and Interpretability
+
+### So far, I believe Gaussian Processes have been the most appropriate model for these experiments, offering a good balance between exploration and exploitation. Linear regression lacked the flexibility to capture non-linear curvature. Neural networks would have required substantial tuning and carried a higher risk of overfitting given the limited dataset.

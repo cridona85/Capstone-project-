@@ -22,7 +22,8 @@ While I have mainly relied on Bayesian techniques, I recognise that Support Vect
 
 Overall, this iterative, black-box process mirrors real-world ML challenges—requiring critical thinking under uncertainty, evidence-based decision-making and adaptive model refinement to progressively move toward optimal solutions.
 
-## **6. Observations as per week 4** 
+## **5. Weekly observations** 
+## **5.1 Week 4** 
 ### Strategy and “Support Vectors”
 
 In this optimisation task, support vectors refer to input points that lie near a decision boundary or a region of rapid change in the response surface. Recognising these points helps identify areas where the function output shifts quickly, indicating where the next query should explore to capture new information. Across the iterations, I achieved improvements from the original outputs for all functions except Function 1, with percentage improvements ranging between 3% (Function 8) and 109% (Function 4). In particular:
@@ -51,3 +52,37 @@ The main trade-off would be between exploitation/misclassification risk (staying
 Model Selection and Interpretability
 
 ### So far, I believe Gaussian Processes have been the most appropriate model for these experiments, offering a good balance between exploration and exploitation. Linear regression lacked the flexibility to capture non-linear curvature. Neural networks would have required substantial tuning and carried a higher risk of overfitting given the limited dataset.
+
+## **5.2 Week 5** 
+
+This week I have started using NN for functions like function 1 where I have been not able to achieved improvements from the original outputs  yet. For the remaining I have continued to use Bayesian optimisation and balance exploration and exploitation depending on the performance of my model so far. In particular:
+
+Function 4 showed consistent improvement each week with exception of week 5, with the highest gain of 109% in Week 4.
+Functions 3, 5, and 7 exhibited steep output transitions (improvements of 68%, 95%, and 88% respectively) between Weeks 2, 3 and 5.
+Functions 2, 6, and 8 showed more moderate improvements (9%, 20%, and 3%, respectively), with gains achieved between Weeks 1, 3 and 5.
+Function 1: is the most problematic so far as I have not achieved improvements from the original outputs  yet
+Hierarchical feature learning
+
+This week’s exploration of hierarchical feature learning was quite helpful to think about my optimization strategy. Neural networks extract progressively complex representations from simple features, and I realised my optimisation follows a similar pattern i.e. starting broadly to capture general structure (exploration), then narrowing focus to refine high-impact regions (exploitation).
+
+### AlexNet and ImageNet classification
+
+This approach mirrors Annemarie’s view of targeting the most influential variables first and Naresh’s description of “progressive refinement.”  Reflecting on the AlexNet and ImageNet breakthroughs, I noted that major performance leaps often arise from incremental improvements e.g. better data normalisation, activation functions. Likewise, my optimisation gains did not come from a single change but from successive refinements such as adjusting kernel parameters, scaling inputs and tuning acquisition functions. As Naufal observed, each iteration deepens insight, and the cumulative effect of small updates can lead to transformative improvements.
+
+### Exploration and Exploitation Trade-offs
+
+There is a strong trade-off between exploitation and exploration in Bayesian optimisation. A more exploratory search, captures more structure but risks inefficiency or overfitting. Conversely, overly exploitative strategies converge faster but may miss the global optimum.
+
+### Building blocks of neural networks
+
+There is an analogy between my optimization strategy and neural network building blocks that helped me better understanding how my surrogate learns. My input points act as data fed to the model,  the posterior mean functions like an activation layer, the acquisition function behaves like a loss gradient guiding optimisation and each  updates to the model as “weights”.  
+
+### Optimisation approach framework
+
+My framework aligns more with rapid prototyping and adaptability than with a fixed, production-style design. I in fact seek to make weekly adjustments to inputs transformation and models depending on previous results and methodology, enabling iterative refinement rather than a static process that simply runs with new data each time.
+
+### Giovanni Liotta Interview
+
+It reminded me that deep learning goes beyond numerical performance but it’s about addressing real-world challenges. In sports models must handle imperfect data and deliver timely insights and the same applies here.
+
+

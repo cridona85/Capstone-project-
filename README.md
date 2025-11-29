@@ -28,7 +28,7 @@ Overall, this iterative, black-box process mirrors real-world ML challenges—re
 
 
 
-## **5.1 Week 4** 
+## **5.1 Week 5** 
 ### Strategy and “Support Vectors”
 
 In this optimisation task, support vectors refer to input points that lie near a decision boundary or a region of rapid change in the response surface. Recognising these points helps identify areas where the function output shifts quickly, indicating where the next query should explore to capture new information. Across the iterations, I achieved improvements from the original outputs for all functions except Function 1, with percentage improvements ranging between 3% (Function 8) and 109% (Function 4). In particular:
@@ -90,4 +90,23 @@ My framework aligns more with rapid prototyping and adaptability than with a fix
 
 It reminded me that deep learning goes beyond numerical performance but it’s about addressing real-world challenges. In sports models must handle imperfect data and deliver timely insights and the same applies here.
 
+## **5.2 Week 6** 
+###Progressive Feature Extraction and Refining the BBO Strategy
 
+CNNs learn by building hierarchical representations, starting with simple edges and moving toward richer, abstract features like textures or full objects. This idea is similar on how I approached my BBO strategy. Rather than expecting the optimiser to immediately find high-value regions, I treated the search process as a form of progressive feature extraction. Early iterations acted like “edge detectors” broadly mapping the landscape and identifying rough patterns or boundaries. Subsequent iterations refined these regions. This layered approach helped me structure my optimisation into clear phases: start with exploration to cover the search space, then refine promising regions and finally exploit the best optima.
+
+###Parallels Between CNN Breakthroughs and BBO Improvements
+
+The development of CNNs demonstrates how incremental, layered improvements accumulate to create significant breakthroughs. My BBO capstone approach and output mirrors this i.e. no single change dramatically enhances performance but iterative adjustments (e.g. tuning surrogate models, experimenting with different kernels, stabilising acquisition logic) gradually improve results. Each refinement builds on the reliability and the output of the previous one, expanding what the optimiser can reliably discover, similarly to CNNs that progressively enhanced the capability to recognise complex visual patterns.
+
+###Balancing Depth, Cost, and Overfitting vs. Explore–Exploit Trade-offs
+
+Training deeper CNNs involves trade-offs: greater depth improves representational power but increases computational cost and the risk of overfitting. Similarly in my BBO project I needed to balance exploration and exploitation. Broad exploration allows global coverage but can be computationally expensive and occasionally unproductive. Focusing too early on exploitation risks locking onto local optima. Using acquisition functions such as Expected Improvement (EI) or Upper Confidence Bound (UCB) allowed me to navigate these trade-offs, analogous to controlling CNN depth and regularisation: enough flexibility to discover meaningful patterns but constrained to avoid wasting resources or overcommitting to local regions.
+
+###CNN Concepts as Inspiration for Optimisation
+
+CNN principles helped shape my optimisation strategy including loss functions (i.e. in BBO tuning acquisition parameters or surrogate regularisation mirrors selecting a loss that aligns with desired outcomes, such as uncertainty reduction) and convolutions (i.e. highlight local patterns, similar to how GP or SVM kernels model local behaviour around promising regions).
+
+###Lessons from Edge AI Deployment
+
+Andrea Dunbar’s discussion on CNN deployment in edge AI highlighted that practical constraints such as limited compute, energy, latency and reliability are as important as accuracy. In my BBO capstone this perspective guided how I benchmark success: not only by whether the optimiser finds high outputs but also by how efficiently and  it does so.

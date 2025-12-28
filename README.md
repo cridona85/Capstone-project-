@@ -22,88 +22,46 @@ While I have mainly relied on Bayesian techniques, I recognise that Support Vect
 
 Overall, this iterative, black-box process mirrors real-world ML challenges—requiring critical thinking under uncertainty, evidence-based decision-making and adaptive model refinement to progressively move toward optimal solutions.
 
-## **5. Overall results and Weekly observations (updated each week)** 
+## **5.Overall results and Weekly improvemnents** 
 <img width="981" height="676" alt="image" src="https://github.com/user-attachments/assets/7ea8b821-60ba-4e20-b409-3e29598909f1" />
 
-## **5.1 Week 5** 
-### Strategy and “Support Vectors”
+## **6.1 Datasheet and model card** 
+## **6.1 Datasheet** 
+#Overview and Motivation
 
-In this optimisation task, support vectors refer to input points that lie near a decision boundary or a region of rapid change in the response surface. Recognising these points helps identify areas where the function output shifts quickly, indicating where the next query should explore to capture new information. Across the iterations, I achieved improvements from the original outputs for all functions except Function 1, with percentage improvements ranging between 3% (Function 8) and 109% (Function 4). In particular:
+This project applies Bayesian Optimisation (BO) to maximise the outputs of a set of unknown (black-box) functions under realistic constraints. Each function represents a simulated real-world optimisation problem where the internal structure is hidden and only input–output observations are available. A key constraint is that only one query per function can be submitted each week, with delayed feedback, requiring careful balancing between exploration and exploitation. The dataset and modelling framework were created by Cristina Donadoni as part of a capstone project, with no external funding. The aim is to study sequential decision-making when evaluations are costly, slow and opaque, closely mirroring real-world optimisation settings.
 
-Function 4 showed consistent improvement each week, with the highest gain of 109% in Week 4, indicating a well-aligned exploration path.
-Functions 3, 5, and 7 exhibited steep output transitions (improvements of 68%, 67%, and 88% respectively) between Weeks 2 and 3. These regions likely acted as support vectors — areas of rapid change but the subsequent decline suggests potential over-exploitation near a local optimum.
-Functions 2, 6, and 8 showed more moderate improvements (9%, 6%, and 3%, respectively), with gains achieved between Weeks 1 and 3.
-Querying around these rapidly changing input regions could help refine the surrogate model further and uncover additional optima.
+#Dataset Composition and Collection
 
-Across all eight functions, I applied Bayesian Optimisation using Gaussian Processes (GPs) with different kernels and acquisition functions. My primary goal was to balance exploration and exploitation.
+The dataset consists of eight independent black-box optimisation problems, with input dimensionality ranging from 1D to 8D. Each data instance corresponds to a weekly query (input vector) and its observed scalar output. Data is collected incrementally over ten weekly rounds, using a deterministic, adaptive sampling strategy driven by Bayesian Optimisation acquisition functions. The dataset is complete relative to the evaluation budget but not exhaustive of the underlying function space. All data is numerical and synthetic, with no personal, sensitive or offensive content. There are no missing values and no fixed train/test splits, as models are retrained each week using all available observations.
 
-### Neural Networks and Gradients
+#Preprocessing and Data Handling
 
-I did not train a neural network surrogate, primarily because the available data was too limited to support robust training and because I have not yet fully completed the training material needed to apply it confidently. Neural networks generally require a large number of observations to generalise effectively whereas Gaussian Processes perform well with sparse data.
+Preprocessing varies by function and includes input scaling and standardisation, output transformations (e.g. log, signed root, Yeo–Johnson), and outlier handling where required (e.g. One-Class SVM). Automatic relevance determination (ARD) is used to infer input importance. Raw observations are preserved alongside transformed versions to support reproducibility.
 
-However, in higher-dimensional settings or with larger datasets, a neural network surrogate could capture more complex non-linear interactions. I plan to explore this approach in future iterations if appropriate. Examining the trends, Functions 3, 4, 6, and 8 displayed stronger sensitivity to specific input variables, as shown by significant week-to-week variation in outputs. In a neural surrogate context, I believe these would correspond to inputs with the steepest gradient magnitudes — indicating where small input changes cause large output differences. Recognising these inputs would help focus future experiments on the most influential variables, thereby accelerating convergence towards the global optimum.
+#Intended Uses and Limitations (Dataset)
 
-### Classification
+The dataset is intended for educational and experimental use, particularly for studying Bayesian Optimisation under constrained evaluation budgets. It is not suitable for fairness analysis, real-time decision systems or direct high-stakes deployment without domain-specific validation. Results are sensitive to early observations, kernel choice and modelling assumptions.
+## **6.2 Model Card** 
+Model Overview
 
-If the optimisation problem were reframed as a classification task, outcomes above a given performance threshold could be labelled as “good” and those below as “bad.”
+Name: Adaptive GP-Based Bayesian Optimisation Framework
+Type: Sequential decision-making using Gaussian Processes
+Version: v1.0
+This is a decision framework, not a single predictive model, designed to propose optimal query points under uncertainty.
 
-Logistic regression or Support Vector Machines (SVMs) could then be used to estimate the decision boundary.
-SVMs could be suitable since their support vectors lie along the margin,  aligning with the idea of focusing queries near regions of uncertainty or rapid change.
-The main trade-off would be between exploitation/misclassification risk (staying close to known regions) and exploration (testing uncertain areas that could reveal better optima).
+Intended Use
 
-Model Selection and Interpretability
+The framework is suitable for black-box optimisation with costly or delayed evaluations in continuous input spaces. It is not designed for discrete optimisation or environments requiring interpretability of the underlying function.
 
-### So far, I believe Gaussian Processes have been the most appropriate model for these experiments, offering a good balance between exploration and exploitation. Linear regression lacked the flexibility to capture non-linear curvature. Neural networks would have required substantial tuning and carried a higher risk of overfitting given the limited dataset.
+Model Details and Strategy
 
-## **5.2 Week 5** 
+Across ten rounds, the approach uses Gaussian Processes with Matérn or RBF kernels (with ARD), combined with adaptive acquisition functions. Strategies include UCB, Expected Improvement (EI), and hybrid EI/UCB or PI/UCB approaches. Candidate points are generated via dense grids (low-dimensional problems) or constrained random sampling (higher dimensions). The strategy evolves per function, reflecting learning from observed performance and uncertainty.
 
-This week I have started using NN for functions like function 1 where I have been not able to achieved improvements from the original outputs  yet. For the remaining I have continued to use Bayesian optimisation and balance exploration and exploitation depending on the performance of my model so far. In particular:
+Performance Summary
 
-Function 4 showed consistent improvement each week with exception of week 5, with the highest gain of 109% in Week 4.
-Functions 3, 5, and 7 exhibited steep output transitions (improvements of 68%, 95%, and 88% respectively) between Weeks 2, 3 and 5.
-Functions 2, 6, and 8 showed more moderate improvements (9%, 20%, and 3%, respectively), with gains achieved between Weeks 1, 3 and 5.
-Function 1: is the most problematic so far as I have not achieved improvements from the original outputs  yet
-Hierarchical feature learning
+Performance is evaluated using best observed output, percentage improvement from baseline, and speed of convergence. Improvements range from ~3% to over 200%, with several functions achieving their best results by Week 6, demonstrating effective exploration–exploitation trade-offs under tight query constraints.
 
-This week’s exploration of hierarchical feature learning was quite helpful to think about my optimization strategy. Neural networks extract progressively complex representations from simple features, and I realised my optimisation follows a similar pattern i.e. starting broadly to capture general structure (exploration), then narrowing focus to refine high-impact regions (exploitation).
+Assumptions, Limitations and Ethics
 
-### AlexNet and ImageNet classification
-
-This approach mirrors Annemarie’s view of targeting the most influential variables first and Naresh’s description of “progressive refinement.”  Reflecting on the AlexNet and ImageNet breakthroughs, I noted that major performance leaps often arise from incremental improvements e.g. better data normalisation, activation functions. Likewise, my optimisation gains did not come from a single change but from successive refinements such as adjusting kernel parameters, scaling inputs and tuning acquisition functions. As Naufal observed, each iteration deepens insight, and the cumulative effect of small updates can lead to transformative improvements.
-
-### Exploration and Exploitation Trade-offs
-
-There is a strong trade-off between exploitation and exploration in Bayesian optimisation. A more exploratory search, captures more structure but risks inefficiency or overfitting. Conversely, overly exploitative strategies converge faster but may miss the global optimum.
-
-### Building blocks of neural networks
-
-There is an analogy between my optimization strategy and neural network building blocks that helped me better understanding how my surrogate learns. My input points act as data fed to the model,  the posterior mean functions like an activation layer, the acquisition function behaves like a loss gradient guiding optimisation and each  updates to the model as “weights”.  
-
-### Optimisation approach framework
-
-My framework aligns more with rapid prototyping and adaptability than with a fixed, production-style design. I in fact seek to make weekly adjustments to inputs transformation and models depending on previous results and methodology, enabling iterative refinement rather than a static process that simply runs with new data each time.
-
-### Giovanni Liotta Interview
-
-It reminded me that deep learning goes beyond numerical performance but it’s about addressing real-world challenges. In sports models must handle imperfect data and deliver timely insights and the same applies here.
-
-## **5.2 Week 6** 
-###Progressive Feature Extraction and Refining the BBO Strategy
-
-CNNs learn by building hierarchical representations, starting with simple edges and moving toward richer, abstract features like textures or full objects. This idea is similar on how I approached my BBO strategy. Rather than expecting the optimiser to immediately find high-value regions, I treated the search process as a form of progressive feature extraction. Early iterations acted like “edge detectors” broadly mapping the landscape and identifying rough patterns or boundaries. Subsequent iterations refined these regions. This layered approach helped me structure my optimisation into clear phases: start with exploration to cover the search space, then refine promising regions and finally exploit the best optima.
-
-###Parallels Between CNN Breakthroughs and BBO Improvements
-
-The development of CNNs demonstrates how incremental, layered improvements accumulate to create significant breakthroughs. My BBO capstone approach and output mirrors this i.e. no single change dramatically enhances performance but iterative adjustments (e.g. tuning surrogate models, experimenting with different kernels, stabilising acquisition logic) gradually improve results. Each refinement builds on the reliability and the output of the previous one, expanding what the optimiser can reliably discover, similarly to CNNs that progressively enhanced the capability to recognise complex visual patterns.
-
-###Balancing Depth, Cost, and Overfitting vs. Explore–Exploit Trade-offs
-
-Training deeper CNNs involves trade-offs: greater depth improves representational power but increases computational cost and the risk of overfitting. Similarly in my BBO project I needed to balance exploration and exploitation. Broad exploration allows global coverage but can be computationally expensive and occasionally unproductive. Focusing too early on exploitation risks locking onto local optima. Using acquisition functions such as Expected Improvement (EI) or Upper Confidence Bound (UCB) allowed me to navigate these trade-offs, analogous to controlling CNN depth and regularisation: enough flexibility to discover meaningful patterns but constrained to avoid wasting resources or overcommitting to local regions.
-
-###CNN Concepts as Inspiration for Optimisation
-
-CNN principles helped shape my optimisation strategy including loss functions (i.e. in BBO tuning acquisition parameters or surrogate regularisation mirrors selecting a loss that aligns with desired outcomes, such as uncertainty reduction) and convolutions (i.e. highlight local patterns, similar to how GP or SVM kernels model local behaviour around promising regions).
-
-###Lessons from Edge AI Deployment
-
-Andrea Dunbar’s discussion on CNN deployment in edge AI highlighted that practical constraints such as limited compute, energy, latency and reliability are as important as accuracy. In my BBO capstone this perspective guided how I benchmark success: not only by whether the optimiser finds high outputs but also by how efficiently and  it does so.
+The approach assumes relatively smooth, stationary functions and reasonable signal-to-noise ratios. Limitations include sensitivity to kernel misspecification and the high cost of poor early exploration decisions. Transparency in documenting transformations, acquisition logic and assumptions supports reproducibility, auditability and responsible real-world adaptation. Additional detail beyond this model card would add complexity without materially improving clarity for the intended audience.

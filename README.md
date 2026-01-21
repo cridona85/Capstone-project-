@@ -23,7 +23,8 @@ While I have mainly relied on Bayesian techniques, I recognise that Support Vect
 Overall, this iterative, black-box process mirrors real-world ML challenges—requiring critical thinking under uncertainty, evidence-based decision-making and adaptive model refinement to progressively move toward optimal solutions.
 
 ## **5.Overall results and Weekly improvemnents** 
-<img width="981" height="676" alt="image" src="https://github.com/user-attachments/assets/7ea8b821-60ba-4e20-b409-3e29598909f1" />
+
+<img width="1243" height="652" alt="image" src="https://github.com/user-attachments/assets/66fbf3ed-d192-4059-a572-144498165112" />
 
 ## **6.1 Datasheet and model card** 
 ## **6.1 Datasheet** 

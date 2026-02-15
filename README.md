@@ -28,41 +28,41 @@ Overall, this iterative, black-box process mirrors real-world ML challenges—re
 
 ## **6.1 Datasheet and model card** 
 ## **6.1 Datasheet** 
-#Overview and Motivation
+**Overview and Motivation**
 
 This project applies Bayesian Optimisation (BO) to maximise the outputs of a set of unknown (black-box) functions under realistic constraints. Each function represents a simulated real-world optimisation problem where the internal structure is hidden and only input–output observations are available. A key constraint is that only one query per function can be submitted each week, with delayed feedback, requiring careful balancing between exploration and exploitation. The dataset and modelling framework were created by Cristina Donadoni as part of a capstone project, with no external funding. The aim is to study sequential decision-making when evaluations are costly, slow and opaque, closely mirroring real-world optimisation settings.
 
-#Dataset Composition and Collection
+**Dataset Composition and Collection**
 
 The dataset consists of eight independent black-box optimisation problems, with input dimensionality ranging from 1D to 8D. Each data instance corresponds to a weekly query (input vector) and its observed scalar output. Data is collected incrementally over ten weekly rounds, using a deterministic, adaptive sampling strategy driven by Bayesian Optimisation acquisition functions. The dataset is complete relative to the evaluation budget but not exhaustive of the underlying function space. All data is numerical and synthetic, with no personal, sensitive or offensive content. There are no missing values and no fixed train/test splits, as models are retrained each week using all available observations.
 
-#Preprocessing and Data Handling
+**Preprocessing and Data Handling**
 
 Preprocessing varies by function and includes input scaling and standardisation, output transformations (e.g. log, signed root, Yeo–Johnson), and outlier handling where required (e.g. One-Class SVM). Automatic relevance determination (ARD) is used to infer input importance. Raw observations are preserved alongside transformed versions to support reproducibility.
 
-#Intended Uses and Limitations (Dataset)
+**Intended Uses and Limitations (Dataset)**
 
 The dataset is intended for educational and experimental use, particularly for studying Bayesian Optimisation under constrained evaluation budgets. It is not suitable for fairness analysis, real-time decision systems or direct high-stakes deployment without domain-specific validation. Results are sensitive to early observations, kernel choice and modelling assumptions.
 ## **6.2 Model Card** 
-Model Overview
+**Model Overview**
 
 Name: Adaptive GP-Based Bayesian Optimisation Framework
 Type: Sequential decision-making using Gaussian Processes
 Version: v1.0
 This is a decision framework, not a single predictive model, designed to propose optimal query points under uncertainty.
 
-Intended Use
+**Intended Use**
 
 The framework is suitable for black-box optimisation with costly or delayed evaluations in continuous input spaces. It is not designed for discrete optimisation or environments requiring interpretability of the underlying function.
 
-Model Details and Strategy
+**Model Details and Strategy**
 
 Across ten rounds, the approach uses Gaussian Processes with Matérn or RBF kernels (with ARD), combined with adaptive acquisition functions. Strategies include UCB, Expected Improvement (EI), and hybrid EI/UCB or PI/UCB approaches. Candidate points are generated via dense grids (low-dimensional problems) or constrained random sampling (higher dimensions). The strategy evolves per function, reflecting learning from observed performance and uncertainty.
 
-Performance Summary
+**Performance Summary**
 
 Performance is evaluated using best observed output, percentage improvement from baseline, and speed of convergence. Improvements range from ~3% to over 200%, with several functions achieving their best results by Week 6, demonstrating effective exploration–exploitation trade-offs under tight query constraints.
 
-Assumptions, Limitations and Ethics
+**Assumptions, Limitations and Ethics**
 
 The approach assumes relatively smooth, stationary functions and reasonable signal-to-noise ratios. Limitations include sensitivity to kernel misspecification and the high cost of poor early exploration decisions. Transparency in documenting transformations, acquisition logic and assumptions supports reproducibility, auditability and responsible real-world adaptation. Additional detail beyond this model card would add complexity without materially improving clarity for the intended audience.
